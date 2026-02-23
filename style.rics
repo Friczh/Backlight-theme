@@ -1,0 +1,127 @@
+@font-face {
+    font-family: "SpotifyMixUITitle";
+    src: url("https://encore.scdn.co/fonts/SpotifyMixUITitleVariable-8769ccfde3379b7ebcadd9529b49d0cc.woff2");
+    font-stretch: 100%;
+    font-display: swap;
+}
+:root {
+    --blyrics-font-family: SpotifyMixUITitle, Satoshi, var(--noto-sans-universal), Avenir, -apple-system,
+		BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans,
+		Helvetica Neue, sans-serif;
+    --blyrics-line-height: 1.25;
+    --blyrics-padding: 1.5rem;
+    --blyrics-font-size: 3.25rem;
+    --blyrics-wobble-duration: 2s;
+    --blyrics-fullscreen-panel-size: 55%; 
+    --blyrics-hover-scale: 1;
+
+    --yt-album-fullscreen-size: 100vh;
+    --yt-album-size: 80%;
+    --yt-album-border-radius: .9rem;
+}
+
+ytmusic-player-page:not([is-mweb-modernization-enabled]) {
+    &:not([video-mode]) {
+        #player.ytmusic-player-page {
+            max-width: var(--yt-album-size) !important;
+            border-radius: var(--yt-album-border-radius);
+            overflow: hidden;
+        }
+
+        &[player-fullscreened] {
+            #player.ytmusic-player-page {
+                position: fixed;
+                max-width: var(--yt-album-fullscreen-size) !important;
+                height: var(--yt-album-fullscreen-size);
+                background: transparent;
+                border-radius: 0;
+                box-shadow: none;
+                z-index: 0;
+            }
+            
+            #thumbnail {
+                mask-image: linear-gradient(
+                    to right, 
+                    rgba(0, 0, 0, 1),
+                    rgba(0, 0, 0, 0)
+                );
+            }
+
+            .song-media-controls.ytmusic-player {
+                background: transparent;
+            }
+
+            &:not([blyrics-dfs]):has(.blyrics-container[data-no-lyrics="true"]) {
+                #main-panel {
+                    transform: none;
+                    transition: none;
+                }
+
+                #player {
+                    transition: none;
+                    max-width: var(--yt-album-fullscreen-size) !important;
+                }
+            }
+        }
+    }
+    
+    &[player-fullscreened] {
+        &:not([blyrics-dfs]) #blyrics-song-info {
+            display: flex;
+            padding: 1rem 1.25rem;
+        }
+    }
+
+    &:not([blyrics-dfs]) #blyrics-song-info {
+        display: none;
+        flex-direction: column;
+        position: fixed;
+        background-color: rgba(0, 0, 0, .45);
+        backdrop-filter: blur(1rem);
+        left: 2rem;
+        top: 2rem;
+        border-radius: .5rem;
+        justify-content: flex-end;
+        align-items: flex-start;
+    }
+
+    #blyrics-song-info > p {
+        text-align: left;
+        font-family: var(--blyrics-translated-font-family);
+        font-weight: 500;
+        line-height: 1.2;
+        text-shadow: 0 0 1rem hsl(0, 0%, 0%, .5);
+    }
+}
+
+.blyrics--line {
+    text-shadow: 0 .3rem .5rem rgba(0, 0, 0, .1);
+}
+
+#blyrics-song-info > p {
+    font-family: var(--blyrics-font-family);
+}
+
+.blyrics-container:has(.blyrics--active) {
+    &:not(.blyrics-user-scrolling) > .blyrics--line:not(.blyrics--active) {
+        &:not(.blyrics--active ~ .blyrics--line) {
+            opacity: 0.6;
+            filter: blur(.3rem);
+            transition: 0.5s 0.3s, transform 0.15s var(--blyrics-anim-delay, 0s) !important;
+        }
+
+        :not(.blyrics--active ~ .blyrics--line) {
+            filter: blur(.05rem);
+        }
+    }
+    
+    & > .blyrics--line:hover {
+        transform: scale(var(--blyrics-hover-scale));
+        transition: all 0.3s ease;
+    }
+}
+.blyrics-container:has(.blyrics--active):not(.blyrics-user-scrolling) > div:not(.blyrics--active):not(.blyrics--active ~ div) {
+    opacity: 0.5;
+    filter: blur(.5rem);
+    transition: 0.5s 0.3s, transform 0.15s var(--blyrics-anim-delay, 0s) !important;
+}
